@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-enum TileSide {
-  open, closed, black, white
-}
+enum TileSide { open, closed, black, white }
 
 class Tile {
   final List<TileSide> sides;
 
   Tile(TileSide top, TileSide right, TileSide bottom, TileSide left)
-    : sides = [top, right, bottom, left];
+      : sides = [top, right, bottom, left];
+
   const Tile.fromList(this.sides);
+
+  Tile rotate() => Tile.fromList(<TileSide>[sides[1], sides[2], sides[3], sides[0]]);
 }
 
 class TileWidget extends StatelessWidget {
@@ -18,9 +19,9 @@ class TileWidget extends StatelessWidget {
   TileWidget(this.tile);
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-        painter: TilePainter(tile),
-        child: AspectRatio(aspectRatio: 1));
+    final drawn = CustomPaint(
+        painter: TilePainter(tile), child: AspectRatio(aspectRatio: 1));
+    return drawn;
   }
 }
 
@@ -52,10 +53,18 @@ class TilePainter extends CustomPainter {
 
   void _paintSide(Canvas canvas, TileSide side) {
     switch (side) {
-      case TileSide.open: _paintOpen(canvas); break;
-      case TileSide.closed: _paintClosed(canvas); break;
-      case TileSide.black: _paintBlack(canvas); break;
-      case TileSide.white: _paintWhite(canvas); break;
+      case TileSide.open:
+        _paintOpen(canvas);
+        break;
+      case TileSide.closed:
+        _paintClosed(canvas);
+        break;
+      case TileSide.black:
+        _paintBlack(canvas);
+        break;
+      case TileSide.white:
+        _paintWhite(canvas);
+        break;
     }
   }
 
@@ -64,8 +73,8 @@ class TilePainter extends CustomPainter {
     var linesize = Size(1 / lineCount, 1);
     _clipTriangle(canvas);
     for (var i = 0; i < lineCount; i++) {
-      canvas.drawRect(
-          Offset(1 / lineCount * i, 0) & linesize, Paint()..color = (i % 2 == 0) ? color2 : color1);
+      canvas.drawRect(Offset(1 / lineCount * i, 0) & linesize,
+          Paint()..color = (i % 2 == 0) ? color2 : color1);
     }
     canvas.restore();
   }
@@ -75,8 +84,8 @@ class TilePainter extends CustomPainter {
     var linesize = Size(1, 1 / lineCount);
     _clipTriangle(canvas);
     for (var i = 0; i < lineCount; i++) {
-      canvas.drawRect(
-          Offset(0, 1 / lineCount * i) & linesize, Paint()..color = (i % 2 == 0) ? color2 : color1);
+      canvas.drawRect(Offset(0, 1 / lineCount * i) & linesize,
+          Paint()..color = (i % 2 == 0) ? color2 : color1);
     }
     canvas.restore();
   }
@@ -85,14 +94,14 @@ class TilePainter extends CustomPainter {
     canvas.save();
     _clipTriangle(canvas);
     canvas.drawRect(Offset.zero & Size(1, 1), Paint()..color = color2);
-    canvas.restore(); 
+    canvas.restore();
   }
 
   void _paintWhite(Canvas canvas) {
     canvas.save();
     _clipTriangle(canvas);
     canvas.drawRect(Offset.zero & Size(1, 1), Paint()..color = color1);
-    canvas.restore(); 
+    canvas.restore();
   }
 
   void _clipTriangle(Canvas canvas) {

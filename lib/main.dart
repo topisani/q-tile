@@ -6,34 +6,51 @@ import 'package:qtile/widgets/grid_widget.dart';
 
 void main() {
   // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
-  debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  //debugDefaultTargetPlatformOverride = TargetPlatform.linux;
 
   runApp(new MyApp());
 }
 
-var tiles = [
-  Tile(TileSide.open, TileSide.closed, TileSide.black, TileSide.white),
-  Tile(TileSide.open, TileSide.closed, TileSide.black, TileSide.white),
-  Tile(TileSide.open, TileSide.closed, TileSide.black, TileSide.white),
-  Tile(TileSide.open, TileSide.closed, TileSide.black, TileSide.white),
+var allTiles = [
+  Tile(TileSide.open, TileSide.closed, TileSide.black, TileSide.closed),
+  Tile(TileSide.open, TileSide.open, TileSide.closed, TileSide.white),
+  Tile(TileSide.closed, TileSide.white, TileSide.white, TileSide.white),
+  Tile(TileSide.black, TileSide.closed, TileSide.black, TileSide.open),
 ];
+
+class GameGrid extends StatefulWidget {
+  _GameGridState createState() => _GameGridState();
+}
+
+class _GameGridState extends State<GameGrid> {
+  var tiles = [
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+    [allTiles[0], allTiles[1], allTiles[2], allTiles[0], allTiles[1], allTiles[2]],
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+            return GridWidget(
+              tiles: this.tiles,
+              setTile: (int r, int c, Tile t) {
+                setState(() {
+                   this.tiles[r][c] = t;
+                });
+              }
+            );
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to q-tile',
-      home: Scaffold(
-          appBar: AppBar(
-            title: Text('Welcome to q-tile'),
-          ),
-          body: Center(
-            child: GridWidget([
-              [tiles[0], tiles[1], tiles[2]],
-              [tiles[0], tiles[1], tiles[2]],
-              [tiles[0], tiles[1], tiles[2]],
-            ]),
-          )),
+      home: Scaffold(body: Center(child: GameGrid())),
       debugShowCheckedModeBanner: false,
     );
   }
